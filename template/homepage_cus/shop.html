@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <!-- Title  -->
+    <title>ChoiChoi</title>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="{% static 'homepage_cus/img/core-img/favicon.ico' %}">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="{% static 'homepage_cus/css/core-style.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage_cus/style.css' %}">
+
+    <!-- Responsive CSS -->
+    <link href="{% static 'homepage_cus/css/responsive.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+    <div id="wrapper">
+
+        <!-- ****** Header Area Start ****** -->
+        <!-- ****** Header Area Start ****** -->
+        <header class="header_area">
+            <!-- Top Header Area Start -->
+            <div class="top_header_area">
+                <div class="container h-100">
+                    <div class="row h-100 align-items-center justify-content-end">
+
+                        <div class="col-12 col-lg-7">
+                            <div class="top_single_area d-flex align-items-center">
+                                <!-- Logo Area -->
+                                <div class="top_logo">
+                                    <a href="#"><img src="{% static 'homepage_cus/img/core-img/choichoi_logo2.png' %}" alt=""></a>
+                                </div>
+                                <!-- Cart & Menu Area -->
+                                <div class="header-cart-menu d-flex align-items-center ml-auto">
+                                    <!-- Cart Area -->
+                                    <div class="cart">
+                                        <a href="#" id="header-cart-btn" target="_blank"><span class="cart_quantity">{{listItem|length}}</span> <i class="ti-bag"></i> Giỏ hàng - {{total_price}}</a>
+                                        <!-- Cart List Area Start -->
+                                        <ul class="cart-list">
+                                            {% for item in listItem %}
+                                            <li>
+                                                <a href="#" class="image"><img src="{% static 'img/upload/'%}{{item.variation.product.product_image}}" class="cart-thumb" alt=""></a>
+                                                <div class="cart-item-desc">
+                                                    <h6><a href="#">{{item.variation.title}}</a></h6>
+                                                    <p>{{item.quantity}}x - <span class="price">{{item.variation.sale_price}}</span></p>
+                                                </div>
+                                                <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
+                                            </li>
+                                            {% endfor %}
+                                            <li class="total">
+                                                <span class="pull-right">Tổng tiền : {{total_price}}</span>
+                                                {% if user.id > 2 %}
+                                                <a href="{% url 'order:showCart' user.id cart.id %}" class="btn btn-sm btn-cart">Giỏ hàng </a>
+                                                <a href="{% url 'order:showCheckout' user.id cart.id %}" class="btn btn-sm btn-checkout">Thanh toán </a>
+                                                {% else %}
+                                                 <a href="{% url 'core:login' %}" class="btn btn-sm btn-cart">Giỏ hàng </a>
+                                                <a href="{% url 'core:login' %}" class="btn btn-sm btn-checkout">Thanh toán </a>
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {% if user.id < 2 %}
+                                    <a href="{% url 'core:login' %}" style = "margin-left:20px">Đăng nhập</a>
+                                    {% else %}
+                                    <a href="{% url 'core:login' %}" style = "margin-left:20px">Đăng xuất</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Header Area End -->
+            <div class="main_header_area">
+                <div class="container h-100">
+                    <div class="row h-100">
+                        <div class="col-12 d-md-flex justify-content-between">
+                            <!-- Header Social Area -->
+                            <div class="header-social-area">
+
+                            </div>
+                            <!-- Menu Area -->
+                            <div class="main-menu-area">
+                                <nav class="navbar navbar-expand-lg align-items-start">
+
+                                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#karl-navbar" aria-controls="karl-navbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"><i class="ti-menu"></i></span></button>
+
+                                    <div class="collapse navbar-collapse align-items-start collapse" id="karl-navbar">
+                                        <ul class="navbar-nav animated" id="nav">
+                                            <li class="nav-item active"><a class="nav-link" href="{% url 'core:gotohome' user.id %}">Trang chủ</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="{% url 'product:showShop' user.id %}">Cửa hàng</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#">Liên hệ </a></li>
+
+                                        </ul>
+                                    </div>
+                                </nav>
+                            </div>
+                            <!-- Help Line -->
+                            <div class="help-line">
+                                <a href="tel:+84868381642"><i class="ti-headphone-alt"></i> 0868381642</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- ****** Header Area End ****** -->
+        <!-- ****** Header Area End ****** -->
+
+
+
+        {% for item in listVar %}
+        <div class="modal fade" id="{{item.id}}" tabindex="-1" role="dialog" aria-labelledby="quickview" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="close btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+                    <div class="modal-body">
+                        <div class="quickview_body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-5">
+                                        <div class="quickview_pro_img">
+                                            <img src="{% static 'img/upload/'%}{{item.product.product_image}}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-7">
+                                        <div class="quickview_pro_des">
+                                            <h4 class="title">{{item.title}}</h4>
+                                            <h5 class="price">{{item.price}} <span>{{item.sale_price}}</span></h5>
+                                            <p>{{item.product.description}}</p>
+                                            {% if user.id > 2 %}
+                                            <a href="{% url 'product:showProduct' user.id cart.id item.id %}">Chi tiết sản phẩm </a>
+                                            {% else %}
+                                            <a href="{% url 'core:login' %}">Chi tiết sản phẩm </a>
+
+                                            {% endif %}
+                                        </div>
+                                        <!-- Add to Cart Form -->
+                                        <form class="cart" method="post">
+                                            <div class="quantity">
+
+                                            </div>
+                                                {% if user.id > 2 %}
+                                                <a href="{% url 'order:addtoCart' user.id item.id cart.id 1 %}" class="add-to-cart-btn">Thêm vào giỏ hàng </a>
+                                                {% else %}
+
+                                                <a href="{% url 'core:login' %}" class="add-to-cart-btn">Thêm vào giỏ hàng </a>
+                                            <!-- Wishlist -->
+                                            {% endif %}
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <section class="shop_grid_area section_padding_100">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-4 col-lg-3">
+                        <div class="shop_sidebar_area">
+                           
+                            <div class="widget catagory mb-50">
+                                <!--  Side Nav  -->
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-8 col-lg-9">
+                        <div class="shop_grid_product_area">
+                            <div class="row">
+
+                                <!-- Single gallery Item -->
+                    {% for item in listVar %}
+                    <div class="col-12 col-sm-6 col-md-4 single_gallery_item {{item.product.discriminator}} wow fadeInUpBig" data-wow-delay="0.2s">
+                        <!-- Product Image -->
+                        <div class="product-img">
+                            <img src="{% static 'img/upload/'%}{{item.product.product_image}} " alt="">
+                            <div class="product-quicview">
+                                <a href="#" data-toggle="modal" data-target="#{{item.id}}"><i class="ti-plus"></i></a>
+                            </div>
+                        </div>
+                        <!-- Product Description -->
+                        <div class="product-description">
+                            <h4 class="product-price">{{item.sale_price}}</h4>
+                            <p>{{item.title}}</p>
+                            <!-- Add to Cart -->
+                            {% if user.id > 2 %}
+                            <a href="{% url 'order:addtoCart' user.id item.id cart.id 1 %}" class="add-to-cart-btn">Thêm vào giỏ hàng </a>
+                            {% else %}
+                            <a href="{% url 'core:login' %}" class="add-to-cart-btn">Thêm vào giỏ hàng </a>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ****** Footer Area Start ****** -->
+        <footer class="footer_area">
+            <div class="container">
+                <div class="row">
+                    <!-- Single Footer Area Start -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="single_footer_area">
+                            <div class="footer-logo">
+                                <img src="img/core-img/logo.png" alt="">
+                            </div>
+                            <div class="copywrite_text d-flex align-items-center">
+                                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Single Footer Area Start -->
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                        <div class="single_footer_area">
+                            <ul class="footer_widget_menu">
+                                <li><a href="#">About</a></li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a href="#">Faq</a></li>
+                                <li><a href="#">Returns</a></li>
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Single Footer Area Start -->
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                        <div class="single_footer_area">
+                            <ul class="footer_widget_menu">
+                                <li><a href="#">My Account</a></li>
+                                <li><a href="#">Shipping</a></li>
+                                <li><a href="#">Our Policies</a></li>
+                                <li><a href="#">Afiliates</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Single Footer Area Start -->
+                    <div class="col-12 col-lg-5">
+                        <div class="single_footer_area">
+                            <div class="footer_heading mb-30">
+                                <h6>Subscribe to our newsletter</h6>
+                            </div>
+                            <div class="subscribtion_form">
+                                <form action="#" method="post">
+                                    <input type="email" name="mail" class="mail" placeholder="Your email here">
+                                    <button type="submit" class="submit">Subscribe</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="line"></div>
+
+                <!-- Footer Bottom Area Start -->
+                <div class="footer_bottom_area">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="footer_social_area text-center">
+                                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- ****** Footer Area End ****** -->
+    </div>
+    <!-- /.wrapper end -->
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="{% static 'homepage_cus/js/jquery/jquery-2.2.4.min.js' %}"></script>
+    <!-- Popper js -->
+    <script src="{% static 'homepage_cus/js/popper.min.js' %}"></script>
+    <!-- Bootstrap js -->
+    <script src="{% static 'homepage_cus/js/bootstrap.min.js' %}"></script>
+    <!-- Plugins js -->
+    <script src="{% static 'homepage_cus/js/plugins.js' %}"></script>
+    <!-- Active js -->
+    <script src="{% static 'homepage_cus/js/active.js' %}"></script>
+
+</body>
+
+</html>

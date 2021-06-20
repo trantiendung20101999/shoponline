@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap');
+
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 20px;
+    width: 450px;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border-radius: 6px;
+    -moz-box-shadow: 0px 0px 5px 0px rgba(212, 182, 212, 1)
+}
+
+.comment-box {
+    padding: 5px
+}
+
+.comment-area textarea {
+    resize: none;
+    border: 1px solid #ad9f9f
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #ffffff;
+    outline: 0;
+    box-shadow: 0 0 0 1px rgb(255, 0, 0) !important
+}
+
+.send {
+    color: #fff;
+    background-color: #ff0000;
+    border-color: #ff0000
+}
+
+.send:hover {
+    color: #fff;
+    background-color: #f50202;
+    border-color: #f50202
+}
+
+.rating {
+    display: flex;
+    margin-top: -10px;
+    flex-direction: row-reverse;
+    margin-left: -4px;
+    float: left
+}
+
+.rating>input {
+    display: none
+}
+
+.rating>label {
+    position: relative;
+    width: 19px;
+    font-size: 25px;
+    color: #ff0000;
+    cursor: pointer
+}
+
+.rating>label::before {
+    content: "\2605";
+    position: absolute;
+    opacity: 0
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before {
+    opacity: 1 !important
+}
+
+.rating>input:checked~label:before {
+    opacity: 1
+}
+
+.rating:hover>input:checked~label:before {
+    opacity: 0.4
+}
+    </style>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- jQuery library -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Title  -->
+    <title>ChoiChoi - Fashion Ecommerce Template | Product Details</title>
+
+    <!-- Favicon  -->
+    <link rel="icon" href="{% static 'homepage_cus/img/core-img/favicon.ico' %}">
+
+    <!-- Core Style CSS -->
+    <link rel="stylesheet" href="{% static 'homepage_cus/css/core-style.css' %}">
+    <link rel="stylesheet" href="{% static 'homepage_cus/style.css' %}">
+
+    <!-- Responsive CSS -->
+    <link href="{% static 'homepage_cus/css/responsive.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- ****** Header Area Start ****** -->
+        <header class="header_area">
+            <!-- Top Header Area Start -->
+            <div class="top_header_area">
+                <div class="container h-100">
+                    <div class="row h-100 align-items-center justify-content-end">
+
+                        <div class="col-12 col-lg-7">
+                            <div class="top_single_area d-flex align-items-center">
+                                <!-- Logo Area -->
+                                <div class="top_logo">
+                                    <a href="#"><img src="{% static 'homepage_cus/img/core-img/choichoi_logo2.png' %}" alt=""></a>
+                                </div>
+                                <!-- Cart & Menu Area -->
+                                <div class="header-cart-menu d-flex align-items-center ml-auto">
+                                    <!-- Cart Area -->
+                                    <div class="cart">
+                                        <a href="#" id="header-cart-btn" target="_blank"><span class="cart_quantity">{{listItem|length}}</span> <i class="ti-bag"></i> Giỏ hàng - {{total_price}}</a>
+                                        <!-- Cart List Area Start -->
+                                        <ul class="cart-list">
+                                            {% for item in listItem %}
+                                            <li>
+                                                <a href="#" class="image"><img src="{% static 'img/upload/'%}{{item.variation.product.product_image}}" class="cart-thumb" alt=""></a>
+                                                <div class="cart-item-desc">
+                                                    <h6><a href="#">{{item.variation.title}}</a></h6>
+                                                    <p>{{item.quantity}}x - <span class="price">{{item.variation.sale_price}}</span></p>
+                                                </div>
+                                                <span class="dropdown-product-remove"><i class="icon-cross"></i></span>
+                                            </li>
+                                            {% endfor %}
+                                            <li class="total">
+                                                <span class="pull-right">Tổng tiền : {{total_price}}</span>
+                                                {% if user.id > 2 %}
+                                                <a href="{% url 'order:showCart' user.id cart.id %}" class="btn btn-sm btn-cart">Giỏ hàng </a>
+                                                <a href="{% url 'order:showCheckout' user.id cart.id %}" class="btn btn-sm btn-checkout">Thanh toán </a>
+                                                {% else %}
+                                                 <a href="{% url 'core:login' %}" class="btn btn-sm btn-cart">Giỏ hàng </a>
+                                                <a href="{% url 'core:login' %}" class="btn btn-sm btn-checkout">Thanh toán </a>
+                                                {% endif %}
+
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    {% if user.id < 2 %}
+                                    <a href="{% url 'core:login' %}" style = "margin-left:20px">Đăng nhập</a>
+                                    {% else %}
+                                    <a href="{% url 'core:login' %}" style = "margin-left:20px">Đăng xuất</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Header Area End -->
+            <div class="main_header_area">
+                <div class="container h-100">
+                    <div class="row h-100">
+                        <div class="col-12 d-md-flex justify-content-between">
+                            <!-- Header Social Area -->
+                            <div class="header-social-area">
+
+                            </div>
+                            <!-- Menu Area -->
+                            <div class="main-menu-area">
+                                <nav class="navbar navbar-expand-lg align-items-start">
+
+                                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#karl-navbar" aria-controls="karl-navbar" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"><i class="ti-menu"></i></span></button>
+
+                                    <div class="collapse navbar-collapse align-items-start collapse" id="karl-navbar">
+                                        <ul class="navbar-nav animated" id="nav">
+                                            <li class="nav-item active"><a class="nav-link" href="{% url 'core:gotohome' user.id %}">Trang chủ</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="{% url 'product:showShop' user.id %}">Cửa hàng</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="#">Liên hệ </a></li>
+
+                                        </ul>
+                                    </div>
+                                </nav>
+                            </div>
+                            <!-- Help Line -->
+                            <div class="help-line">
+                                <a href="tel:+84868381642"><i class="ti-headphone-alt"></i> 0868381642</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ****** Header Area End ****** -->
+
+
+        <!-- <<<<<<<<<<<<<<<<<<<< Breadcumb Area Start <<<<<<<<<<<<<<<<<<<< -->
+        <!-- <<<<<<<<<<<<<<<<<<<< Breadcumb Area End <<<<<<<<<<<<<<<<<<<< -->
+
+        <!-- <<<<<<<<<<<<<<<<<<<< Single Product Details Area Start >>>>>>>>>>>>>>>>>>>>>>>>> -->
+        <section class="single_product_details_area section_padding_0_100">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-12 col-md-6">
+                        <div class="single_product_thumb">
+                            <div id="product_details_slider" class="carousel slide" data-ride="carousel">
+
+                                <ol class="carousel-indicators">
+                                    <li class="active" data-target="#product_details_slider" data-slide-to="0" style="background-image: url({% static 'img/upload/'%}{{variation.product.product_image}});">
+                                    </li>
+                                    {% for item in listImage %}
+                                    <li data-target="#product_details_slider" data-slide-to="{{forloop.counter}}" style="background-image: url({% static 'img/upload/'%}{{item.product_image}});">
+                                    </li>
+                                    {% endfor %}
+                                </ol>
+
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <a class="gallery_img" href="{% static 'img/upload/'%}{{variation.product.product_image}}">
+                                        <img class="d-block w-100" src="{% static 'img/upload/'%}{{variation.product.product_image}}" alt="First slide">
+                                    </a>
+                                    </div>
+                                    {% for item in listImage %}
+                                    <div class="carousel-item">
+                                        <a class="gallery_img" href="{% static 'img/upload/'%}{{item.product_image}}">
+                                        <img class="d-block w-100" src="{% static 'img/upload/'%}{{item.product_image}}" alt="">
+                                    </a>
+                                    </div>
+                                   {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="single_product_desc">
+
+                            <h4 class="title"><a href="#">{{variation.title}}</a></h4>
+
+                            <h4 class="price">{{variation.sale_price}}</h4>
+                            {% if variation.inventory > 0 %}
+                            <p class="available">Available: <span class="text-muted">In Stock</span></p>
+                            {% else %}
+                            <p class="available">Nonavailable: <span class="text-muted">Out Stock</span></p>
+
+                            {% endif %}
+
+
+
+                            <!-- Add to Cart Form -->
+                            {% if user.id > 2 %}
+                            <form class="cart clearfix mb-50 d-flex" method="get" action="{% url 'order:addtoCart' user.id variation.id cart.id 1 %}">
+                            {% else %}
+                            <form class="cart clearfix mb-50 d-flex" method="get" action="{% url 'core:login' %}">
+                            {% endif %}
+                                <button type="submit" name="addtocart" value="5" class="btn cart-submit d-block">Add to cart</button>
+                            </form>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- <<<<<<<<<<<<<<<<<<<< Single Product Details Area End >>>>>>>>>>>>>>>>>>>>>>>>> -->
+
+        <!-- ****** Quick View Modal Area Start ****** -->
+        <div class="modal fade" id="quickview" tabindex="-1" role="dialog" aria-labelledby="quickview" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <button type="button" class="close btn" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                    <div class="modal-body">
+                        <div class="quickview_body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-lg-5">
+                                        <div class="quickview_pro_img">
+                                            <img src="img/product-img/product-1.jpg" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-lg-7">
+                                        <div class="quickview_pro_des">
+                                            <h4 class="title">Boutique Silk Dress</h4>
+                                            <div class="top_seller_product_rating mb-15">
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                            </div>
+                                            <h5 class="price">$120.99 <span>$130</span></h5>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia expedita quibusdam aspernatur, sapiente consectetur accusantium perspiciatis praesentium eligendi, in fugiat?</p>
+                                            <a href="#">View Full Product Details</a>
+                                        </div>
+                                        <!-- Add to Cart Form -->
+                                        <form class="cart" method="post">
+                                            <div class="quantity">
+                                                <span class="qty-minus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty ) &amp;&amp; qty &gt; 1 ) effect.value--;return false;"><i class="fa fa-minus" aria-hidden="true"></i></span>
+
+                                                <input type="number" class="qty-text" id="qty2" step="1" min="1" max="12" name="quantity" value="1">
+
+                                                <span class="qty-plus" onclick="var effect = document.getElementById('qty'); var qty = effect.value; if( !isNaN( qty )) effect.value++;return false;"><i class="fa fa-plus" aria-hidden="true"></i></span>
+                                            </div>
+                                            <button type="submit" name="addtocart" value="5" class="cart-submit">Add to cart</button>
+                                            <!-- Wishlist -->
+                                            <div class="modal_pro_wishlist">
+                                                <a href="wishlist.html" target="_blank"><i class="ti-heart"></i></a>
+                                            </div>
+                                            <!-- Compare -->
+                                            <div class="modal_pro_compare">
+                                                <a href="compare.html" target="_blank"><i class="ti-stats-up"></i></a>
+                                            </div>
+                                        </form>
+
+                                        <div class="share_wf mt-30">
+                                            <p>Share With Friend</p>
+                                            <div class="_icon">
+                                                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                                                <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ****** Quick View Modal Area End ****** -->
+
+
+        <div class="card col -4">
+            <div class="row">
+                <div class="col-2">  </div>
+                <div class="col-10">
+                    <div class="comment-box ml-2">
+                        <h4>Thêm bình luận </h4>
+                        <form action="{% url 'users:addReact' user.id cart.id variation.id %}" method="POST">
+                            {% csrf_token %}
+                            <div class="rating"> <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label> <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label> <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label> <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label> <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label> </div>
+                            <div class="comment-area"> <textarea class="form-control" placeholder="Thêm bình luận" rows="4" name="comment" ></textarea> </div>
+                            <div class="comment-btns mt-2">
+                                <div class="row">
+                                    <div class="col-6">
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="pull-right"> <button class="btn btn-success send btn-sm">Gửi <i class="fa fa-long-arrow-right ml-1"></i></button> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ****** Footer Area Start ****** -->
+        <footer class="footer_area">
+            <div class="container">
+                <div class="row">
+                    <!-- Single Footer Area Start -->
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="single_footer_area">
+                            <div class="footer-logo">
+                                <img src="img/core-img/logo.png" alt="">
+                            </div>
+                            <div class="copywrite_text d-flex align-items-center">
+                                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | Made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a> &amp; distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Single Footer Area Start -->
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                        <div class="single_footer_area">
+                            <ul class="footer_widget_menu">
+                                <li><a href="#">About</a></li>
+                                <li><a href="#">Blog</a></li>
+                                <li><a href="#">Faq</a></li>
+                                <li><a href="#">Returns</a></li>
+                                <li><a href="#">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Single Footer Area Start -->
+                    <div class="col-12 col-sm-6 col-md-3 col-lg-2">
+                        <div class="single_footer_area">
+                            <ul class="footer_widget_menu">
+                                <li><a href="#">My Account</a></li>
+                                <li><a href="#">Shipping</a></li>
+                                <li><a href="#">Our Policies</a></li>
+                                <li><a href="#">Afiliates</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Single Footer Area Start -->
+                    <div class="col-12 col-lg-5">
+                        <div class="single_footer_area">
+                            <div class="footer_heading mb-30">
+                                <h6>Subscribe to our newsletter</h6>
+                            </div>
+                            <div class="subscribtion_form">
+                                <form action="#" method="post">
+                                    <input type="email" name="mail" class="mail" placeholder="Your email here">
+                                    <button type="submit" class="submit">Subscribe</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="line"></div>
+
+                <!-- Footer Bottom Area Start -->
+                <div class="footer_bottom_area">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="footer_social_area text-center">
+                                <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                <a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- ****** Footer Area End ****** -->
+    </div>
+    <!-- /.wrapper end -->
+
+    <!-- jQuery (Necessary for All JavaScript Plugins) -->
+    <script src="{% static 'homepage_cus/js/jquery/jquery-2.2.4.min.js' %}"></script>
+    <!-- Popper js -->
+    <script src="{% static 'homepage_cus/js/popper.min.js' %}"></script>
+    <!-- Bootstrap js -->
+    <script src="{% static 'homepage_cus/js/bootstrap.min.js' %}"></script>
+    <!-- Plugins js -->
+    <script src="{% static 'homepage_cus/js/plugins.js' %}"></script>
+    <!-- Active js -->
+    <script src="{% static 'homepage_cus/js/active.js' %}"></script>
+
+</body>
+
+</html>
